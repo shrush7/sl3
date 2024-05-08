@@ -1,0 +1,102 @@
+import pandas as pd
+import numpy as np
+import seaborn as sb
+import warnings
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
+import scipy.stats as stats
+
+df=pd.read_csv('data.csv')
+
+df.head()
+
+df.info()
+
+df.describe()
+
+#.Scan all variables for missing values and inconsistencies. If there are missing values and/or inconsistencies, use any of the suitable techniques to deal with them.
+
+df.isnull()
+
+df.isnull().sum()
+
+new_df=df["raisedhands"].replace(np.nan,0)
+
+new_df.isnull().sum()
+
+df.dropna(axis=0,inplace=True)
+
+df.info()
+
+#22.Scan all numeric variables for outliers. If there are outliers, use any of the suitable techniques to deal with them.
+
+import numpy as np
+import seaborn as sb
+import matplotlib.pyplot as plt
+
+# Calculate quartiles and IQR
+Q1 = np.percentile(df['raisedhands'], 25)
+Q3 = np.percentile(df['raisedhands'], 75)
+IQR = Q3 - Q1
+
+# Set upper and lower bounds
+upper_bound = Q3 + 1.5 * IQR
+lower_bound = Q1 - 1.5 * IQR
+
+# Filter dataframe
+df2 = df[(df['raisedhands'] > lower_bound) & (df['raisedhands'] < upper_bound)]
+
+# Reset index
+df2.reset_index(drop=True, inplace=True)
+
+
+# Plot boxplot before filtering
+sb.boxplot(df['raisedhands'], orient='v').set_title('Before')
+
+# Plot boxplot after filtering
+
+
+plt.show()
+
+sb.boxplot(df2['raisedhands'], orient='v').set_title('After')
+
+max_val = df['raisedhands'].quantile(0.95)
+min_val = df['raisedhands'].quantile(0.05)
+
+# Filter dataframe
+df2 = df[(df['raisedhands'] > min_val) & (df['raisedhands'] < max_val)]
+
+# Reset index
+df2.reset_index(drop=True, inplace=True)
+
+# Create subplots
+fig, axes = plt.subplots(1, 2)
+
+# Plot boxplot before filtering
+sb.boxplot(df['raisedhands'], orient='v', ax=axes[0]).set_title('Before')
+
+# Plot boxplot after filtering
+sb.boxplot(df2['raisedhands'], orient='v', ax=axes[1]).set_title('After')
+
+plt.show()
+
+#Apply data transformations on at least one of the variables. The purpose of this transformation should be one of the following reasons: to change the scale for better understanding of the variable, to convert a non-linear relation into a linear one, or to decrease the skewness and convert the distribution into a normal distribution.
+
+df.head()
+
+scaler=StandardScaler()              #Scalaing the data
+x = df[['raisedhands','VisITedResources','AnnouncementsView','Discussion']]
+scaledf=scaler.fit_transform(x)
+print(scaledf)
+
+df.Discussion.hist()
+
+sb.distplot(df['Discussion'],bins=40)
+
+df['Discussion'].skew()
+
+log=np.log(df['Discussion'])
+print(log.skew())
+
+sb.distplot(log,bins=40)
+

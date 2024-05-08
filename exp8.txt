@@ -1,0 +1,45 @@
+import pandas as pd
+import numpy as np
+import seaborn as sns
+
+df = sns.load_dataset("titanic")
+
+df
+
+df.info()
+
+df.describe()
+
+df.head()
+
+x= df["fare"]
+x
+
+df.info()
+
+df_cleaned=df.drop(["pclass","embarked","embark_town","deck"],axis=1)
+df_cleaned.head(10)
+
+df_cleaned.info()
+
+df_binary = pd.get_dummies(df_cleaned, columns=['sex','adult_male','alive','alone','who'], drop_first=True)
+mapping = {'First': 1.0, 'Second': 2.0, 'Third': 3.0}
+df_binary['class'] = df_binary['class'].map(mapping)
+
+# Convert the column to float type
+df_binary['class'] = df_binary['class'].astype(float)
+
+df_binary.head()
+
+df_binary.corr(method="pearson")
+
+df_cleaned.isnull().sum()
+
+sns.histplot(data=df,x="fare",bins=20)
+
+sns.histplot(data=df,x="fare",bins=500,binwidth=5)
+
+sns.histplot(data=df,x="fare",bins=8)
+
+sns.barplot(x='sex',y='age',data=df)
+

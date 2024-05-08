@@ -1,0 +1,63 @@
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import warnings
+warnings.filterwarnings('ignore')
+
+df1=pd.read_csv("data.csv")
+
+df1.info()
+
+df1.isnull().sum()
+
+df1.describe()
+
+med_age=df1['Age'].median()
+
+df1['Age'].fillna(med_age,inplace=True)
+
+df1.info()
+
+df1.size
+
+891*12
+
+df1.shape
+
+df1
+
+#categorical variables into quantitative variables
+#METHOD1
+# replacing values
+df1['Sex'].replace(['male', 'female'],[0, 1], inplace=True)
+
+#METHOD2
+from sklearn.preprocessing import LabelEncoder
+# creating instance of labelencoder
+labelencoder = LabelEncoder()
+# Assigning numerical values and storing in another column
+df1['Labelencoding_Embarked'] = labelencoder.fit_transform(df1["Embarked"])
+df1
+
+df1['Labelencoding_Embarked'].value_counts()
+
+df1['Cabin'] = df1['Cabin'].notnull().astype(int)
+
+df1.isnull().sum()
+
+df1['Embarked'].dropna()
+
+df1['Labelencoding_Embarked'].isnull().sum()
+
+df1.isnull().sum()
+
+# Assuming your DataFrame is named df
+# Perform one-hot encoding on the "Cabin" column
+cabin_encoded = pd.get_dummies(df1['Cabin'], prefix='Cabin')
+# Concatenate the encoded columns with the original DataFrame
+df1 = pd.concat([df1, cabin_encoded], axis=1)
+# Drop the original "Cabin" column
+df1.drop('Cabin', axis=1, inplace=True)
+
+df1
